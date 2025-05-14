@@ -1,6 +1,6 @@
  const axios = require('axios');
 const UPoLPrefix = [
-  'nemo',
+  'lucie',
   'ai',
   'Dori',
   'bot',
@@ -28,11 +28,11 @@ const UPoLPrefix = [
       
      const upol = event.body.substring(ahprefix.length).trim();
    if (!upol) {
-        await message.reply('(⁠◍⁠•⁠ᴗ⁠•⁠◍⁠)⁠❤ salut majesté , comment puis-je vous servir aujourd'hui ?(⁠✿⁠ ⁠♡⁠‿⁠♡⁠)');
+        await message.reply('salut majesté , comment puis-je vous servir aujourd hui ?💌😍💞');
         return;
       }
       
-      const apply = ['Awww🥹, seigneur Avez vous besoin de quelque chose ?', 'je suis entièrement a vous seigneur (⁠っ⁠˘⁠з⁠(⁠˘⁠⌣⁠˘⁠ ⁠)', 'En quoi puis-je vous êtes utile majesté ?', 'Je suis follement amoureuse devine de qui😍💞'];
+      const apply = ['Awww🥹, seigneur Avez vous besoin de quelque chose ?', 'je suis entièrement a vous seigneur 🥹', 'En quoi puis-je vous êtes utile majesté ?', 'Je suis follement amoureuse devine de qui😍💞'];
       
      const randomapply = apply[Math.floor(Math.random() * apply.length)];
 
