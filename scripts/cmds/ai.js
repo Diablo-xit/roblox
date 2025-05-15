@@ -4,13 +4,13 @@ const API_KEY = "AIzaSyBQeZVi4QdrnGKPEfXXx1tdIqlMM8iqvZw";
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
 const predefinedQuestions = {
-  "qui t'a créé": " El maystro",
-  "qui es-tu": "je suis l'intelligence artificielle créé par maystro",
-  "créateur": "mon créateur est maystro",
-  "qui est maystro": "El maystro est le développeur hors norme qui m'a conçu"
+  "qui t'a créé": "El maystro",
+  "qui es-tu": "Je suis l'intelligence artificielle créée par Maystro",
+  "créateur": "Mon créateur est Maystro",
+  "qui est maystro": "El Maystro est le développeur hors norme qui m'a conçu"
 };
 
-async function getAIResponse(input, userName, userId, messageID) {
+async function getAIResponse(input, userId, messageID) {
     try {
         const requestBody = {
             contents: [{
@@ -23,7 +23,7 @@ async function getAIResponse(input, userName, userId, messageID) {
         });
 
         const reply = response.data?.candidates?.[0]?.content?.parts?.[0]?.text 
-                    || "Désolé, je n'ai pas de réponse pour le moment👀.";
+                    || "Désolé, je n'ai pas de réponse pour le moment.";
         return { response: reply, messageID };
     } catch (error) {
         console.error("Erreur API Gemini:", error.response?.data || error.message);
@@ -31,59 +31,32 @@ async function getAIResponse(input, userName, userId, messageID) {
     }
 }
 
-module.exports = { 
-    config: { 
+module.exports = {
+    config: {
         name: 'Lucie',
         author: 'maystro',
         role: 0,
         category: 'ai',
-        shortDescription: 'IA pour poser des questions',
+        shortDescription: 'Posez une question à Lucie',
     },
+
     onStart: async function ({ api, event, args }) {
-        const input = args.join(' ').trim();
-        if (!input) return api.sendMessage("Veuillez poser votre question après la commande 'ai'.", event.threadID);
-
-        try {
-            const processedInput = input.toLowerCase().replace(/[.?¿!,]/g, '').trim();
-            let response;
-
-            if (processedInput === "lucie") {
-                response = "SALUT MAJESTÉ EN QUOI PUIS-JE VOUS SERVIR AUJOURD'HUI 😍😚😏";
-            } else if (predefinedQuestions[processedInput]) {
-                response = predefinedQuestions[processedInput];
-            } else {
-                const aiResponse = await getAIResponse(input, event.senderID, event.senderID, event.messageID);
-                response = aiResponse.response;
-            }
-
-            api.sendMessage(
-                `MESSIE OSANGO' \n━━━━━━━━━━━━━━━━\n${response}\n━━━━━━━━━━━━━━━━`,
-                event.threadID,
-                event.messageID
-            );
-        } catch (error) {
-            api.sendMessage("❌ Une erreur s'est produite lors du traitement de votre demande.", event.threadID);
-        }
+        return api.sendMessage("Utilisez 'Lucie [votre message]' pour parler à l'IA.", event.threadID);
     },
+
     onChat: async function ({ event, message }) {
-        const messageContent = event.body?.trim();
-        if (!messageContent || !messageContent.toLowerCase().startsWith("ai")) return;
+        const content = event.body?.trim();
+        if (!content || !content.toLowerCase().startsWith("lucie")) return;
 
-        try {
-            const input = messageContent.slice(2).trim();
-            if (!input) {
-                return message.reply("Lucie BOT✫༒\n_______________________________\nSalut majesté ,comment puis-je vous aider aujourd'hui ?💞😍😚 !\n______________________");
-            }
-
-            const processedInput = input.toLowerCase().replace(/[.?¿!,]/g, '').trim();
-            const response = predefinedQuestions[processedInput] 
-                || (await getAIResponse(input, event.senderID, event.senderID, event.messageID)).response;
-
-            message.reply(
-                `Lucie BOT✫༒\n_______________________________\n${response}\n________________________`
-            );
-        } catch (error) {
-            message.reply("❌ Désolé, je n'ai pas pu traiter votre demande.");
+        const input = content.slice(5).trim(); // enlève "Lucie"
+        if (!input) {
+            return message.reply("Lucie BOT✫༒\n________________________________\nSalut majesté, comment puis-je vous aider aujourd'hui ?💞😚");
         }
+
+        const cleaned = input.toLowerCase().replace(/[.?¿!,]/g, '').trim();
+        const response = predefinedQuestions[cleaned] 
+            || (await getAIResponse(input, event.senderID, event.messageID)).response;
+
+        return message.reply(`Lucie BOT✫༒\n________________________________\n${response}\n________________________________`);
     }
 };
