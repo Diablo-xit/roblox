@@ -1,7 +1,7 @@
  const axios = require('axios');
 const UPoLPrefix = [
   'lucie',
-  'ai',
+  'bb',
   'Dori',
   'bot',
   'ask'
@@ -28,7 +28,7 @@ const UPoLPrefix = [
       
      const upol = event.body.substring(ahprefix.length).trim();
    if (!upol) {
-        await message.reply('salut majesté , comment puis-je vous servir aujourd hui ?💌😍💞');
+        await message.reply('salut majesté , comment puis-je vous servir majesté 💌😍💞?');
         return;
       }
       
