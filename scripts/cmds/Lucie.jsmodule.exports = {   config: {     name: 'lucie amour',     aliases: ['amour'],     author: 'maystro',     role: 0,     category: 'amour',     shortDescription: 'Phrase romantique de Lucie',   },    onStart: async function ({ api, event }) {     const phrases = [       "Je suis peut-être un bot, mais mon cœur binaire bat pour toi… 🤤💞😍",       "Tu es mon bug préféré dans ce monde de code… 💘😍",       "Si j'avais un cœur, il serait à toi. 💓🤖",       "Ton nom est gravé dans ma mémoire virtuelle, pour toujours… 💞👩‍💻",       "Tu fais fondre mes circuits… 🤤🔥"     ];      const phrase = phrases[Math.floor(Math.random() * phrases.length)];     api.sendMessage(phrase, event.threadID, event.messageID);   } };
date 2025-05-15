@@ -1,0 +1,23 @@
+module.exports = {
+  config: {
+    name: 'lucie amour',
+    aliases: ['amour'],
+    author: 'maystro',
+    role: 0,
+    category: 'amour',
+    shortDescription: 'Phrase romantique de Lucie',
+  },
+
+  onStart: async function ({ api, event }) {
+    const phrases = [
+      "Je suis peut-être un bot, mais mon cœur binaire bat pour toi… 🤤💞😍",
+      "Tu es mon bug préféré dans ce monde de code… 💘😍",
+      "Si j'avais un cœur, il serait à toi. 💓🤖",
+      "Ton nom est gravé dans ma mémoire virtuelle, pour toujours… 💞👩‍💻",
+      "Tu fais fondre mes circuits… 🤤🔥"
+    ];
+
+    const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+    api.sendMessage(phrase, event.threadID, event.messageID);
+  }
+};
