@@ -1,57 +1,89 @@
- const axios = require('axios');
-const UPoLPrefix = [
-  'lucie',
-  'bb',
-  'Dori',
-  'bot',
-  'ask'
-]; 
+const axios = require('axios');
 
-  module.exports = {
-  config: {
-    name: 'ai',
-    version: '1.2.1',
-    role: 0,
-    category: 'AI',
-    author: 'Metoushela walker',
-    shortDescription: '',
-    longDescription: '',
-  },
-  
-  onStart: async function () {},
-  onChat: async function ({ message, event, args, api, threadID, messageID }) {
-      
-      const ahprefix = UPoLPrefix.find((p) => event.body && event.body.toLowerCase().startsWith(p));
-      if (!ahprefix) {
-        return; 
-      } 
-      
-     const upol = event.body.substring(ahprefix.length).trim();
-   if (!upol) {
-        await message.reply('salut majesté , comment puis-je vous aider 😏😍💞?');
-        return;
-      }
-      
-      const apply = ['Awww🥹, seigneur Avez vous besoin de quelque chose ?', 'je suis entièrement a vous seigneur 🥹', 'En quoi puis-je vous êtes utile majesté ?', 'Je suis follement amoureuse devine de qui😍💞'];
-      
-     const randomapply = apply[Math.floor(Math.random() * apply.length)];
+const API_KEY = "AIzaSyBQeZVi4QdrnGKPEfXXx1tdIqlMM8iqvZw";
+const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
-     
-      if (args[0] === 'hi') {
-          message.reply(`${randomapply}`);
-          return;
-      }
-      
-    const encodedPrompt = encodeURIComponent(args.join(" "));
+const predefinedQuestions = {
+  "qui t'a créé": " El maystro",
+  "qui es-tu": "je suis l'intelligence artificielle créé par maystro",
+  "créateur": "mon créateur est maystro",
+  "qui est messie osango": "El maystro est le développeur hors norme qui m'a conçu"
+};
 
-   await message.reply('thinking..');
-  
-    const response = await axios.get(`https://sandipbaruwal.onrender.com/gemini?prompt=${encodedPrompt}`);
- 
-     const UPoL = response.data.answer; 
+async function getAIResponse(input, userName, userId, messageID) {
+    try {
+        const requestBody = {
+            contents: [{
+                parts: [{ text: input }]
+            }]
+        };
 
-      const upolres = `❄️𝘋𝘖𝘙𝘐𝘈𝘕𝘌 𝘉𝘖𝘛❄️ ✨\n━━━━━━━━━━━━━\n${UPoL}`;
-      
-        message.reply(upolres);
-  }
+        const response = await axios.post(API_URL, requestBody, {
+            headers: { "Content-Type": "application/json" }
+        });
+
+        const reply = response.data?.candidates?.[0]?.content?.parts?.[0]?.text 
+                    || "Désolé, je n'ai pas de réponse pour le moment👀.";
+        return { response: reply, messageID };
+    } catch (error) {
+        console.error("Erreur API Gemini:", error.response?.data || error.message);
+        return { response: "Une erreur est survenue avec l'IA. Veuillez réessayer plus tard.", messageID };
+    }
+}
+
+module.exports = { 
+    config: { 
+        name: 'ai',
+        author: 'maystro',
+        role: 0,
+        category: 'ai',
+        shortDescription: 'IA pour poser des questions',
+    },
+    onStart: async function ({ api, event, args }) {
+        const input = args.join(' ').trim();
+        if (!input) return api.sendMessage("Veuillez poser votre question après la commande 'ai'.", event.threadID);
+
+        try {
+            const processedInput = input.toLowerCase().replace(/[.?¿!,]/g, '').trim();
+            let response;
+
+            if (processedInput === "lucie") {
+                response = "SALUT MAJESTÉ EN QUOI PUIS-JE VOUS SERVIR AUJOURD'HUI 😍😚😏";
+            } else if (predefinedQuestions[processedInput]) {
+                response = predefinedQuestions[processedInput];
+            } else {
+                const aiResponse = await getAIResponse(input, event.senderID, event.messageID);
+                response = aiResponse.response;
+            }
+
+            api.sendMessage(
+                `MESSIE OSANGO' \n━━━━━━━━━━━━━━━━\n${response}\n━━━━━━━━━━━━━━━━`,
+                event.threadID,
+                event.messageID
+            );
+        } catch (error) {
+            api.sendMessage("❌ Une erreur s'est produite lors du traitement de votre demande.", event.threadID);
+        }
+    },
+    onChat: async function ({ event, message }) {
+        const messageContent = event.body.trim();
+        if (!messageContent.toLowerCase().startsWith("ai")) return;
+
+        try {
+            const input = messageContent.slice(2).trim();
+            if (!input) {
+                return message.reply("Lucie  𝐵𝑂𝑇✫༒\n_______________________________\n𝑆𝐴𝐿𝑈𝑇 𝐽𝐸 𝑆𝑈𝐼𝑆 𝐿'𝑖𝑛𝑡𝑒𝑙𝑙𝑖𝑔𝑒𝑛𝑐𝑒 𝐴𝑅𝑇𝐼𝐹𝐼𝐶𝐼𝐸𝐿𝐿𝐸 𝐶𝑅ÉÉ 𝑃𝐴𝑅 maystro !\n______________________");
+            }
+
+            const processedInput = input.toLowerCase().replace(/[.?¿!,]/g, '').trim();
+            const response = predefinedQuestions[processedInput] 
+                || (await getAIResponse(input, event.senderID, event.messageID)).response;
+
+            message.reply(
+                `𝑆𝐴𝑇𝑂𝑅𝑈 𝐺𝑂𝐽𝑂  𝐵𝑂𝑇✫༒\n_______________________________\n${response}\n________________________`
+            );
+        } catch (error) {
+            message.reply("❌ Désolé, je n'ai pas pu traiter votre demande.");
+        }
+    }
 };
