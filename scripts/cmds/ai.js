@@ -72,7 +72,7 @@ module.exports = {
         try {
             const input = messageContent.slice(2).trim();
             if (!input) {
-                return message.reply("Lucie  𝐵𝑂𝑇✫༒\n_______________________________\nSalut majesté ,comment puis-je vous aider aujourd'hui ?💞😍😚 !\n______________________");
+                return message.reply("Lucie  𝐵𝑂𝑇✫\n_______________________________\nSalut majesté ,comment puis-je vous aider aujourd'hui ?💞😍😚 !\n______________________");
             }
 
             const processedInput = input.toLowerCase().replace(/[.?¿!,]/g, '').trim();
