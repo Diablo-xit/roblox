@@ -7,7 +7,7 @@ const predefinedQuestions = {
   "qui t'a créé": " El maystro",
   "qui es-tu": "je suis l'intelligence artificielle créé par maystro",
   "créateur": "mon créateur est maystro",
-  "qui est messie osango": "El maystro est le développeur hors norme qui m'a conçu"
+  "qui est maystro": "El maystro est le développeur hors norme qui m'a conçu"
 };
 
 async function getAIResponse(input, userName, userId, messageID) {
@@ -33,7 +33,7 @@ async function getAIResponse(input, userName, userId, messageID) {
 
 module.exports = { 
     config: { 
-        name: 'ai',
+        name: 'Lucie',
         author: 'maystro',
         role: 0,
         category: 'ai',
@@ -72,7 +72,7 @@ module.exports = {
         try {
             const input = messageContent.slice(2).trim();
             if (!input) {
-                return message.reply("Lucie  𝐵𝑂𝑇✫༒\n_______________________________\n𝑆𝐴𝐿𝑈𝑇 𝐽𝐸 𝑆𝑈𝐼𝑆 𝐿'𝑖𝑛𝑡𝑒𝑙𝑙𝑖𝑔𝑒𝑛𝑐𝑒 𝐴𝑅𝑇𝐼𝐹𝐼𝐶𝐼𝐸𝐿𝐿𝐸 𝐶𝑅ÉÉ 𝑃𝐴𝑅 maystro !\n______________________");
+                return message.reply("Lucie  𝐵𝑂𝑇✫༒\n_______________________________\nSalut majesté ,comment puis-je vous aider aujourd'hui ?💞😍😚 !\n______________________");
             }
 
             const processedInput = input.toLowerCase().replace(/[.?¿!,]/g, '').trim();
