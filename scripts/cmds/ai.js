@@ -28,7 +28,7 @@ const UPoLPrefix = [
       
      const upol = event.body.substring(ahprefix.length).trim();
    if (!upol) {
-        await message.reply('salut majesté , comment puis-je vous servir majesté 💌😍💞?');
+        await message.reply('salut majesté , comment puis-je vous aider 😏😍💞?');
         return;
       }
       
