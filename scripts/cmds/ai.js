@@ -4,10 +4,11 @@ const API_KEY = "AIzaSyBQeZVi4QdrnGKPEfXXx1tdIqlMM8iqvZw";
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
 const predefinedQuestions = {
-  "qui t'a créé": "messie osango est mon créateur",
-  "qui es-tu": "je suis l'intelligence artificielle créé par messie",
-  "créateur": "mon créateur est messie osango",
-  "qui est messie osango": "messie osango est le développeur hors norme qui m'a conçu"
+  "qui t'a créé": "maystro est mon créateur 💞🤤",
+  "qui es-tu": "je suis Lucie bot, une intelligence artificielle créée par maystro 💞",
+  "créateur": "mon créateur est maystro 💞",
+  "qui est maystro": "maystro est le développeur exceptionnel qui m'a conçue avec amour 🤤💞😍",
+  "android": "Android est un système que j’aime beaucoup 🤤"
 };
 
 async function getAIResponse(input, userName, userId, messageID) {
@@ -33,22 +34,22 @@ async function getAIResponse(input, userName, userId, messageID) {
 
 module.exports = { 
     config: { 
-        name: 'ai',
-        author: 'messie osango',
+        name: 'lucie',
+        author: 'maystro',
         role: 0,
         category: 'ai',
-        shortDescription: 'IA pour poser des questions',
+        shortDescription: 'Lucie bot pour répondre aux questions',
     },
     onStart: async function ({ api, event, args }) {
         const input = args.join(' ').trim();
-        if (!input) return api.sendMessage("Veuillez poser votre question après la commande 'ai'.", event.threadID);
+        if (!input) return api.sendMessage("Pose ta question après le mot 'Lucie'.", event.threadID);
 
         try {
             const processedInput = input.toLowerCase().replace(/[.?¿!,]/g, '').trim();
             let response;
 
-            if (processedInput === "ai") {
-                response = "𝑆𝐴𝐿𝑈𝑇 𝐽𝐸 𝑆𝑈𝐼𝑆 𝐿'𝑖𝑛𝑡𝑒𝑙𝑙𝑖𝑔𝑒𝑛𝑐𝑒 𝐴𝑅𝑇𝐼𝐹𝐼𝐶𝐼𝐸𝐿𝐿𝐸 𝐶𝑅ÉÉ 𝑃𝐴𝑅 𝑀𝐸𝑆𝑆𝐼𝐸 𝑂𝑆𝐴𝑁𝐺𝑂 !";
+            if (processedInput === "lucie") {
+                response = "𝑆𝐴𝐿𝑈𝑇, 𝐽𝐸 𝑆𝑈𝐼𝑆 𝐿𝑈𝐶𝐼𝐸 𝐵𝑂𝑇, 𝐿'𝐼𝑁𝑇𝐸𝐿𝐿𝐼𝐺𝐸𝑁𝐶𝐸 𝐴𝑅𝑇𝐼𝐹𝐼𝐶𝐼𝐸𝐿𝐿𝐸 𝐶𝑅ÉÉ 𝑃𝐴𝑅 𝑀𝐴𝑌𝑆𝑇𝑅𝑂 💞";
             } else if (predefinedQuestions[processedInput]) {
                 response = predefinedQuestions[processedInput];
             } else {
@@ -57,7 +58,7 @@ module.exports = {
             }
 
             api.sendMessage(
-                `MESSIE OSANGO' \n━━━━━━━━━━━━━━━━\n${response}\n━━━━━━━━━━━━━━━━`,
+                `Lucie bot ❤️\n━━━━━━━━━━━━━━━━\n${response}\n━━━━━━━━━━━━━━━━`,
                 event.threadID,
                 event.messageID
             );
@@ -67,12 +68,12 @@ module.exports = {
     },
     onChat: async function ({ event, message }) {
         const messageContent = event.body.trim();
-        if (!messageContent.toLowerCase().startsWith("ai")) return;
+        if (!messageContent.toLowerCase().startsWith("lucie ")) return;
 
         try {
-            const input = messageContent.slice(2).trim();
+            const input = messageContent.slice(6).trim();
             if (!input) {
-                return message.reply("𝑆𝐴𝑇𝑂𝑅𝑈 𝐺𝑂𝐽𝑂  𝐵𝑂𝑇✫༒\n_______________________________\n𝑆𝐴𝐿𝑈𝑇 𝐽𝐸 𝑆𝑈𝐼𝑆 𝐿'𝑖𝑛𝑡𝑒𝑙𝑙𝑖𝑔𝑒𝑛𝑐𝑒 𝐴𝑅𝑇𝐼𝐹𝐼𝐶𝐼𝐸𝐿𝐿𝐸 𝐶𝑅ÉÉ 𝑃𝐴𝑅 𝑀𝐸𝑆𝑆𝐼𝐸 𝑂𝑆𝐴𝑁𝐺𝑂 !\n______________________");
+                return message.reply("Lucie bot ❤️\n━━━━━━━━━━━━━━━━\n𝑆𝐴𝐿𝑈𝑇, 𝐽𝐸 𝑆𝑈𝐼𝑆 𝐿𝑈𝐶𝐼𝐸 𝐵𝑂𝑇, 𝐶𝑅ÉÉ 𝑃𝐴𝑅 𝑀𝐴𝑌𝑆𝑇𝑅𝑂 💞\n━━━━━━━━━━━━━━━━");
             }
 
             const processedInput = input.toLowerCase().replace(/[.?¿!,]/g, '').trim();
@@ -80,10 +81,10 @@ module.exports = {
                 || (await getAIResponse(input, event.senderID, event.messageID)).response;
 
             message.reply(
-                `𝑆𝐴𝑇𝑂𝑅𝑈 𝐺𝑂𝐽𝑂  𝐵𝑂𝑇✫༒\n_______________________________\n${response}\n________________________`
+                `Lucie bot ❤️\n━━━━━━━━━━━━━━━━\n${response}\n━━━━━━━━━━━━━━━━`
             );
         } catch (error) {
-            message.reply("❌ Désolé, je n'ai pas pu traiter votre demande.");
+            message.reply("❌ Désolé, je n'ai pas pu traiter ta demande.");
         }
     }
 };
