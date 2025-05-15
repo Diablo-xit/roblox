@@ -4,13 +4,13 @@ const API_KEY = "AIzaSyBQeZVi4QdrnGKPEfXXx1tdIqlMM8iqvZw";
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
 const predefinedQuestions = {
-  "qui t'a créé": "El maystro",
-  "qui es-tu": "Je suis l'intelligence artificielle créée par Maystro",
-  "créateur": "Mon créateur est Maystro",
-  "qui est maystro": "El Maystro est le développeur hors norme qui m'a conçu"
+  "qui t'a créé": "messie osango est mon créateur",
+  "qui es-tu": "je suis l'intelligence artificielle créé par messie",
+  "créateur": "mon créateur est messie osango",
+  "qui est messie osango": "messie osango est le développeur hors norme qui m'a conçu"
 };
 
-async function getAIResponse(input, userId, messageID) {
+async function getAIResponse(input, userName, userId, messageID) {
     try {
         const requestBody = {
             contents: [{
@@ -31,32 +31,59 @@ async function getAIResponse(input, userId, messageID) {
     }
 }
 
-module.exports = {
-    config: {
-        name: 'Lucie',
-        author: 'maystro',
+module.exports = { 
+    config: { 
+        name: 'ai',
+        author: 'messie osango',
         role: 0,
         category: 'ai',
-        shortDescription: 'Posez une question à Lucie',
+        shortDescription: 'IA pour poser des questions',
     },
-
     onStart: async function ({ api, event, args }) {
-        return api.sendMessage("Utilisez 'Lucie [votre message]' pour parler à l'IA.", event.threadID);
-    },
+        const input = args.join(' ').trim();
+        if (!input) return api.sendMessage("Veuillez poser votre question après la commande 'ai'.", event.threadID);
 
-    onChat: async function ({ event, message }) {
-        const content = event.body?.trim();
-        if (!content || !content.toLowerCase().startsWith("lucie")) return;
+        try {
+            const processedInput = input.toLowerCase().replace(/[.?¿!,]/g, '').trim();
+            let response;
 
-        const input = content.slice(5).trim(); // enlève "Lucie"
-        if (!input) {
-            return message.reply("Lucie BOT✫༒\n________________________________\nSalut majesté, comment puis-je vous aider aujourd'hui ?💞😚");
+            if (processedInput === "ai") {
+                response = "𝑆𝐴𝐿𝑈𝑇 𝐽𝐸 𝑆𝑈𝐼𝑆 𝐿'𝑖𝑛𝑡𝑒𝑙𝑙𝑖𝑔𝑒𝑛𝑐𝑒 𝐴𝑅𝑇𝐼𝐹𝐼𝐶𝐼𝐸𝐿𝐿𝐸 𝐶𝑅ÉÉ 𝑃𝐴𝑅 𝑀𝐸𝑆𝑆𝐼𝐸 𝑂𝑆𝐴𝑁𝐺𝑂 !";
+            } else if (predefinedQuestions[processedInput]) {
+                response = predefinedQuestions[processedInput];
+            } else {
+                const aiResponse = await getAIResponse(input, event.senderID, event.messageID);
+                response = aiResponse.response;
+            }
+
+            api.sendMessage(
+                `MESSIE OSANGO' \n━━━━━━━━━━━━━━━━\n${response}\n━━━━━━━━━━━━━━━━`,
+                event.threadID,
+                event.messageID
+            );
+        } catch (error) {
+            api.sendMessage("❌ Une erreur s'est produite lors du traitement de votre demande.", event.threadID);
         }
+    },
+    onChat: async function ({ event, message }) {
+        const messageContent = event.body.trim();
+        if (!messageContent.toLowerCase().startsWith("ai")) return;
 
-        const cleaned = input.toLowerCase().replace(/[.?¿!,]/g, '').trim();
-        const response = predefinedQuestions[cleaned] 
-            || (await getAIResponse(input, event.senderID, event.messageID)).response;
+        try {
+            const input = messageContent.slice(2).trim();
+            if (!input) {
+                return message.reply("𝑆𝐴𝑇𝑂𝑅𝑈 𝐺𝑂𝐽𝑂  𝐵𝑂𝑇✫༒\n_______________________________\n𝑆𝐴𝐿𝑈𝑇 𝐽𝐸 𝑆𝑈𝐼𝑆 𝐿'𝑖𝑛𝑡𝑒𝑙𝑙𝑖𝑔𝑒𝑛𝑐𝑒 𝐴𝑅𝑇𝐼𝐹𝐼𝐶𝐼𝐸𝐿𝐿𝐸 𝐶𝑅ÉÉ 𝑃𝐴𝑅 𝑀𝐸𝑆𝑆𝐼𝐸 𝑂𝑆𝐴𝑁𝐺𝑂 !\n______________________");
+            }
 
-        return message.reply(`Lucie BOT✫༒\n________________________________\n${response}\n________________________________`);
+            const processedInput = input.toLowerCase().replace(/[.?¿!,]/g, '').trim();
+            const response = predefinedQuestions[processedInput] 
+                || (await getAIResponse(input, event.senderID, event.messageID)).response;
+
+            message.reply(
+                `𝑆𝐴𝑇𝑂𝑅𝑈 𝐺𝑂𝐽𝑂  𝐵𝑂𝑇✫༒\n_______________________________\n${response}\n________________________`
+            );
+        } catch (error) {
+            message.reply("❌ Désolé, je n'ai pas pu traiter votre demande.");
+        }
     }
 };
